@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Controlo Total · Extreme Challenge · III Edição</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@500;700;900&family=Barlow+Condensed:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0d;
+    --bg-2:#111114;
+    --surface:#16161b;
+    --surface-2:#1c1c22;
+    --border:#27272f;
+    --border-strong:#3a3a45;
+    --text:#ece9e3;
+    --text-2:#b4afa4;
+    --muted:#76726a;
+    --dim:#4a4842;
+    --red:#c1272d;
+    --red-deep:#8a1c20;
+    --olive:#7a8038;
+    --amber:#d4a017;
+    --grid:rgba(255,255,255,0.03);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:400;
+    font-size:17px;
+    line-height:1.55;
+    overflow-x:hidden;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:48px 48px;
+  }
+
+  /* === Noise overlay === */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    opacity:.6; z-index:1; mix-blend-mode:overlay;
+  }
+
+  .stencil{font-family:'Big Shoulders Stencil Display', sans-serif; letter-spacing:.02em; line-height:.9}
+  .mono{font-family:'JetBrains Mono', monospace; font-size:.78em; letter-spacing:.05em}
+  .upper{text-transform:uppercase}
+
+  /* ============= NAV ============= */
+  nav.topbar{
+    position:fixed; top:0; left:0; right:0;
+    z-index:50;
+    background:rgba(11,11,13,.85);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  nav.topbar .inner{
+    max-width:1440px; margin:0 auto;
+    padding:14px 28px;
+    display:flex; justify-content:space-between; align-items:center;
+    gap:32px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    text-decoration:none; color:var(--text);
+  }
+  .brand-mark{
+    width:36px; height:36px;
+    border:1.5px solid var(--red);
+    display:grid; place-items:center;
+    position:relative;
+    transform:rotate(45deg);
+  }
+  .brand-mark::before{
+    content:"";
+    position:absolute; inset:5px;
+    border:1px solid var(--red);
+  }
+  .brand-mark span{
+    transform:rotate(-45deg);
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:900;
+    color:var(--red);
+    font-size:18px;
+  }
+  .brand-text{display:flex; flex-direction:column; line-height:1}
+  .brand-text .l1{font-family:'Big Shoulders Stencil Display'; font-weight:700; font-size:18px; letter-spacing:.08em}
+  .brand-text .l2{font-family:'JetBrains Mono'; font-size:10px; color:var(--muted); margin-top:3px; letter-spacing:.15em}
+
+  nav .links{display:flex; gap:4px}
+  nav .links a{
+    color:var(--text-2); text-decoration:none;
+    padding:8px 14px;
+    font-family:'JetBrains Mono'; font-size:11px; letter-spacing:.15em;
+    text-transform:uppercase;
+    border:1px solid transparent;
+    transition:.2s;
+  }
+  nav .links a:hover{color:var(--text); border-color:var(--border)}
+  nav .links a.active{color:var(--red); border-color:var(--red)}
+
+  .nav-meta{
+    font-family:'JetBrains Mono'; font-size:10.5px; color:var(--muted);
+    letter-spacing:.12em; display:flex; gap:14px; align-items:center;
+  }
+  .pulse{
+    width:8px;height:8px; background:var(--red); border-radius:50%;
+    box-shadow:0 0 0 0 rgba(193,39,45,.7);
+    animation:pulse 2s infinite;
+    display:inline-block;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(193,39,45,.6)}
+    70%{box-shadow:0 0 0 10px rgba(193,39,45,0)}
+    100%{box-shadow:0 0 0 0 rgba(193,39,45,0)}
+  }
+
+  /* ============= HERO ============= */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    padding:140px 28px 80px;
+    display:flex; flex-direction:column; justify-content:center;
+    max-width:1440px; margin:0 auto;
+    z-index:2;
+  }
+
+  .hero-corners::before, .hero-corners::after{
+    content:"";
+    position:absolute;
+    width:48px; height:48px;
+    border:1px solid var(--red);
+  }
+  .hero-corners::before{top:120px; left:28px; border-right:none; border-bottom:none}
+  .hero-corners::after{bottom:60px; right:28px; border-left:none; border-top:none}
+
+  .hero-classified{
+    font-family:'JetBrains Mono'; font-size:11px;
+    color:var(--red);
+    letter-spacing:.4em;
+    text-transform:uppercase;
+    margin-bottom:32px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .hero-classified::before, .hero-classified::after{
+    content:""; flex:1; max-width:140px;
+    height:1px; background:var(--red);
+  }
+
+  .hero-title{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:900;
+    font-size:clamp(56px, 14vw, 220px);
+    line-height:.82;
+    letter-spacing:-.01em;
+    margin-bottom:20px;
+    background:linear-gradient(180deg, var(--text) 0%, var(--text) 60%, #6b6862 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 60px rgba(193,39,45,.06);
+  }
+  .hero-title .accent{color:var(--red); -webkit-text-fill-color:var(--red)}
+
+  .hero-sub{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:500;
+    font-size:clamp(22px, 3vw, 38px);
+    letter-spacing:.12em;
+    color:var(--text-2);
+    margin-bottom:48px;
+    text-transform:uppercase;
+  }
+
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:48px;
+    align-items:end;
+    margin-top:24px;
+  }
+
+  .hero-tagline{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:clamp(28px, 4vw, 56px);
+    line-height:1;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    color:var(--text);
+    border-left:3px solid var(--red);
+    padding-left:24px;
+  }
+  .hero-tagline span{display:block; color:var(--muted)}
+  .hero-tagline em{
+    font-style:normal;
+    color:var(--red);
+    -webkit-text-fill-color:var(--red);
+  }
+
+  .hero-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+  }
+  .hero-stat{
+    background:var(--bg);
+    padding:24px 22px;
+    position:relative;
+  }
+  .hero-stat .label{
+    font-family:'JetBrains Mono'; font-size:10px;
+    color:var(--muted); letter-spacing:.2em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .hero-stat .value{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:900;
+    font-size:54px;
+    line-height:.85;
+    color:var(--text);
+  }
+  .hero-stat .unit{
+    font-family:'JetBrains Mono'; font-size:11px;
+    color:var(--muted); margin-top:6px;
+    letter-spacing:.1em;
+  }
+  .hero-stat.alert .value{color:var(--red)}
+
+  .hero-meta{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;
+    font-family:'JetBrains Mono'; font-size:11px;
+    color:var(--muted); letter-spacing:.12em;
+    text-transform:uppercase;
+  }
+  .hero-meta span{color:var(--text-2)}
+
+  /* ============= SECTION ============= */
+  section.block{
+    max-width:1440px; margin:0 auto;
+    padding:100px 28px;
+    position:relative;
+    z-index:2;
+  }
+  .section-head{
+    display:grid;
+    grid-template-columns:140px 1fr auto;
+    gap:32px;
+    align-items:end;
+    margin-bottom:48px;
+    padding-bottom:24px;
+    border-bottom:1px solid var(--border);
+  }
+  .section-num{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:96px;
+    color:var(--red);
+    line-height:.8;
+  }
+  .section-title{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:64px;
+    line-height:.9;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+  }
+  .section-title small{
+    display:block;
+    font-family:'JetBrains Mono';
+    font-weight:400;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:.2em;
+    margin-top:14px;
+  }
+  .section-tag{
+    font-family:'JetBrains Mono';
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    text-align:right;
+  }
+  .section-tag b{color:var(--red); font-weight:500}
+
+  /* ============= MAP ============= */
+  .map-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:32px;
+    margin-top:20px;
+  }
+  .map-card{
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    padding:24px;
+    position:relative;
+  }
+  .map-card-head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px;
+    font-family:'JetBrains Mono';
+    font-size:11px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .map-card-head b{color:var(--red); font-weight:500}
+
+  #routeMap{ width:100%; height:auto; display:block; aspect-ratio:1.6 / 1; }
+
+  .legend{
+    display:flex; flex-direction:column; gap:6px;
+    margin-top:18px;
+  }
+  .legend-row{
+    display:grid;
+    grid-template-columns:36px 22px 1fr auto;
+    gap:14px;
+    align-items:center;
+    padding:10px 12px;
+    background:var(--surface);
+    border-left:2px solid transparent;
+    font-family:'Barlow Condensed';
+    font-size:15px;
+    transition:.2s;
+    cursor:pointer;
+    text-decoration:none;
+    color:var(--text);
+  }
+  .legend-row:hover{background:var(--surface-2); border-left-color:var(--red)}
+  .legend-row .lbl{font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); letter-spacing:.15em}
+  .legend-row .marker{
+    width:18px; height:18px; border-radius:50%;
+    border:2px solid var(--bg);
+    box-shadow:0 0 0 1px currentColor;
+  }
+  .legend-row .name{font-weight:500; letter-spacing:.02em}
+  .legend-row .dist{font-family:'JetBrains Mono'; font-size:11px; color:var(--text-2); letter-spacing:.1em}
+
+  /* ============= OVERVIEW PROFILE ============= */
+  .profile-master{
+    margin-top:24px;
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    padding:32px;
+  }
+  .profile-master-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:24px;
+    flex-wrap:wrap; gap:20px;
+  }
+  .profile-master-head h3{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:32px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .profile-master-head h3 small{
+    display:block;
+    font-family:'JetBrains Mono';
+    font-weight:400; font-size:11px; color:var(--muted);
+    letter-spacing:.2em; margin-top:8px;
+  }
+  .profile-master-stats{
+    display:flex; gap:32px;
+  }
+  .pm-stat .v{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700; font-size:28px; line-height:1;
+  }
+  .pm-stat.up .v{color:var(--olive)}
+  .pm-stat.dn .v{color:var(--amber)}
+  .pm-stat .l{
+    font-family:'JetBrains Mono'; font-size:10px;
+    color:var(--muted); letter-spacing:.15em; text-transform:uppercase;
+    margin-top:4px;
+  }
+
+  /* ============= DAYS ============= */
+  .day{
+    margin-bottom:96px;
+    position:relative;
+  }
+  .day-head{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:32px;
+    align-items:center;
+    padding:28px 0 24px;
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    margin-bottom:32px;
+  }
+  .day-num{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:900;
+    font-size:110px;
+    line-height:.8;
+    color:var(--text);
+    position:relative;
+    padding-right:32px;
+  }
+  .day-num::after{
+    content:attr(data-tag);
+    position:absolute;
+    top:8px;
+    right:8px;
+    font-family:'JetBrains Mono';
+    font-size:10px;
+    color:var(--red);
+    letter-spacing:.2em;
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+  }
+  .day-info h2{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:42px;
+    line-height:1;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    margin-bottom:12px;
+  }
+  .day-info h2 .arrow{color:var(--red); margin:0 12px}
+  .day-info .meta{
+    font-family:'JetBrains Mono'; font-size:11px;
+    color:var(--muted); letter-spacing:.15em; text-transform:uppercase;
+  }
+  .day-info .meta span{color:var(--text-2)}
+
+  .diff-badge{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 20px;
+    border:1px solid var(--border-strong);
+    background:var(--surface);
+    font-family:'JetBrains Mono';
+    font-size:11px;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .diff-badge.hard{color:var(--amber); border-color:var(--amber)}
+  .diff-badge.extreme{color:var(--red); border-color:var(--red); background:rgba(193,39,45,.07)}
+  .diff-badge .dots{display:inline-flex; gap:3px}
+  .diff-badge .dots i{
+    width:8px; height:8px; background:currentColor; opacity:.25;
+    display:inline-block;
+  }
+  .diff-badge .dots i.on{opacity:1}
+
+  .day-body{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+  }
+  .day-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    align-self:start;
+  }
+  .day-stat{
+    background:var(--bg-2);
+    padding:24px 22px;
+    position:relative;
+  }
+  .day-stat .label{
+    font-family:'JetBrains Mono'; font-size:10px;
+    color:var(--muted); letter-spacing:.2em; text-transform:uppercase;
+    margin-bottom:10px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .day-stat .label::before{
+    content:""; width:6px; height:6px; background:var(--red);
+  }
+  .day-stat .value{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:900;
+    font-size:46px;
+    line-height:.85;
+  }
+  .day-stat .unit{
+    font-family:'JetBrains Mono'; font-size:10px;
+    color:var(--muted); letter-spacing:.1em; margin-top:4px;
+  }
+  .day-stat.up .value{color:var(--olive)}
+  .day-stat.dn .value{color:var(--amber)}
+
+  .day-profile{
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    padding:24px;
+    position:relative;
+  }
+  .day-profile-head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:14px;
+    font-family:'JetBrains Mono';
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:.2em;
+    text-transform:uppercase;
+  }
+  .day-profile-head b{color:var(--red); font-weight:500}
+  .elev-svg{width:100%; height:auto; display:block}
+
+  .day-desc{
+    margin-top:24px;
+    grid-column:1 / -1;
+    background:var(--surface);
+    border-left:2px solid var(--red);
+    padding:20px 28px;
+    font-family:'Barlow Condensed';
+    font-size:16px;
+    line-height:1.6;
+    color:var(--text-2);
+  }
+  .day-desc b{color:var(--text); font-weight:600}
+
+  /* ============= FOOTER ============= */
+  footer{
+    border-top:1px solid var(--border);
+    padding:60px 28px 40px;
+    max-width:1440px;
+    margin:60px auto 0;
+    position:relative;
+    z-index:2;
+  }
+  .foot-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:48px;
+    margin-bottom:48px;
+  }
+  .foot-grid h4{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+    color:var(--text);
+  }
+  .foot-grid p, .foot-grid li{
+    font-family:'Barlow Condensed';
+    font-size:15px;
+    color:var(--text-2);
+    line-height:1.7;
+    list-style:none;
+  }
+  .foot-grid li{
+    padding-left:18px; position:relative;
+  }
+  .foot-grid li::before{
+    content:"›";
+    position:absolute; left:0;
+    color:var(--red);
+    font-family:'JetBrains Mono';
+    font-weight:700;
+  }
+  .foot-bottom{
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;
+    font-family:'JetBrains Mono';
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:.15em;
+    text-transform:uppercase;
+  }
+
+  /* ============= RESPONSIVE ============= */
+  @media (max-width:1024px){
+    nav .nav-meta{display:none}
+    .hero-grid{grid-template-columns:1fr; gap:32px}
+    .map-grid{grid-template-columns:1fr}
+    .day-head{grid-template-columns:auto 1fr; gap:20px}
+    .day-head .diff-badge{grid-column:1 / -1; justify-self:start}
+    .day-body{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+    .section-head{grid-template-columns:auto 1fr; gap:20px}
+    .section-num{font-size:64px}
+    .section-title{font-size:42px}
+    .section-tag{grid-column:1/-1; text-align:left}
+  }
+  @media (max-width:640px){
+    body{font-size:15px}
+    nav.topbar .inner{padding:12px 18px; gap:12px}
+    nav .links{display:none}
+    .brand-text .l1{font-size:14px}
+    .brand-text .l2{font-size:9px}
+    .hero{padding:120px 18px 60px}
+    .hero-corners::before, .hero-corners::after{display:none}
+    .hero-stats{grid-template-columns:1fr 1fr}
+    .hero-stat{padding:18px 14px}
+    .hero-stat .value{font-size:34px}
+    .hero-tagline{font-size:24px; padding-left:14px}
+    section.block{padding:60px 18px}
+    .day-num{font-size:64px}
+    .day-info h2{font-size:24px}
+    .day-info h2 .arrow{margin:0 6px}
+    .day-stats{grid-template-columns:1fr 1fr}
+    .day-stat{padding:16px 14px}
+    .day-stat .value{font-size:30px}
+    .profile-master{padding:18px}
+    .profile-master-head h3{font-size:22px}
+    .profile-master-stats{gap:14px; flex-wrap:wrap}
+    .pm-stat .v{font-size:20px}
+    footer{padding:40px 18px 30px}
+  }
+
+  /* === Briefing 3-col grid (responsive) === */
+  .briefing-cells{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    margin-top:20px;
+  }
+  .briefing-cells > div{
+    background:var(--bg-2);
+    padding:32px;
+  }
+  .briefing-cells p{
+    font-size:17px;
+    line-height:1.6;
+    color:var(--text-2);
+  }
+  .briefing-cells .cell-tag{
+    font-family:'JetBrains Mono';
+    font-size:11px;
+    color:var(--red);
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  @media (max-width:900px){
+    .briefing-cells{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:640px){
+    .briefing-cells{grid-template-columns:1fr}
+    .briefing-cells > div{padding:24px}
+  }
+
+  /* === GMAPS tactical buttons === */
+  .gmaps-cta{
+    display:inline-flex; align-items:center; gap:12px;
+    padding:14px 22px;
+    background:transparent;
+    color:var(--text);
+    text-decoration:none;
+    border:1px solid var(--red);
+    font-family:'JetBrains Mono';
+    font-size:11px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    transition:.2s;
+    position:relative;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  @media (max-width:480px){
+    .gmaps-cta{
+      white-space:normal;
+      padding:12px 16px;
+      font-size:10px;
+      letter-spacing:.15em;
+    }
+  }
+  .gmaps-cta::before{
+    content:""; width:6px; height:6px;
+    background:var(--red);
+    flex-shrink:0;
+  }
+  .gmaps-cta .arrow-out{
+    color:var(--red);
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:18px;
+    line-height:.5;
+    margin-left:4px;
+    transition:.2s;
+  }
+  .gmaps-cta:hover{
+    background:rgba(193,39,45,.08);
+    color:var(--red);
+  }
+  .gmaps-cta:hover .arrow-out{
+    transform:translate(2px,-2px);
+  }
+  .gmaps-cta.small{
+    padding:8px 14px;
+    font-size:10px;
+    letter-spacing:.15em;
+  }
+  .gmaps-cta.small::before{ width:5px; height:5px }
+  .gmaps-cta.small .arrow-out{ font-size:14px }
+
+  /* === Rota CTA bar === */
+  .rota-cta-bar{
+    margin-top:28px;
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    padding:24px 28px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .rota-cta-bar .rcta-text .lbl{
+    font-family:'JetBrains Mono';
+    font-size:11px;
+    color:var(--red);
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .rota-cta-bar .rcta-text h4{
+    font-family:'Big Shoulders Stencil Display';
+    font-weight:700;
+    font-size:28px;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    color:var(--text);
+  }
+  .rota-cta-bar .rcta-text h4 small{
+    color:var(--muted);
+    font-family:'JetBrains Mono';
+    font-size:11px;
+    font-weight:400;
+    letter-spacing:.15em;
+    margin-left:8px;
+  }
+
+  /* === Day header right column adjustment === */
+  .day-actions{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+  }
+  @media (max-width:1024px){
+    .day-actions{
+      grid-column:1 / -1;
+      flex-direction:row;
+      justify-self:start;
+    }
+  }
+
+  /* === Reveal animation === */
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .8s ease-out, transform .8s ease-out}
+  .reveal.in{opacity:1; transform:none}
+
+  @media print{
+    body{background:white; color:black; font-size:11pt}
+    nav.topbar{display:none}
+    .hero{min-height:auto; padding:20pt}
+    body::before{display:none}
+    .day{page-break-inside:avoid; margin-bottom:20pt}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="topbar">
+  <div class="inner">
+    <a href="#top" class="brand">
+      <div class="brand-mark"><span>CT</span></div>
+      <div class="brand-text">
+        <span class="l1">CONTROLO TOTAL</span>
+        <span class="l2">III · EXTREME CHALLENGE</span>
+      </div>
+    </a>
+    <div class="links">
+      <a href="#briefing">Briefing</a>
+      <a href="#rota">Rota</a>
+      <a href="#dia-1">D1</a>
+      <a href="#dia-2">D2</a>
+      <a href="#dia-3">D3</a>
+      <a href="#dia-4">D4</a>
+      <a href="#dia-5">D5</a>
+    </div>
+    <div class="nav-meta">
+      <span class="pulse"></span>
+      <span>OP. CAOS · 22–27 SET 2026</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero hero-corners" id="top">
+  <div class="hero-classified">CLASSIFICADO · OPERAÇÃO CAOS · III EDIÇÃO</div>
+
+  <h1 class="hero-title stencil">
+    EXTREME<br>
+    <span class="accent">CHALLENGE</span>
+  </h1>
+  <div class="hero-sub">5 DIAS · TERRENO SELVAGEM · AUTONOMIA TOTAL</div>
+
+  <div class="hero-grid">
+    <div class="hero-tagline">
+      Não é uma prova.<br>
+      <em>É um processo.</em>
+      <span>Grutas de Mira de Aire → Centro Geodésico de Portugal</span>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="label">DISTÂNCIA</div>
+        <div class="value">166,6</div>
+        <div class="unit">QUILÓMETROS</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">DURAÇÃO</div>
+        <div class="value">46:35</div>
+        <div class="unit">HORAS DE MARCHA</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">DESNÍVEL +</div>
+        <div class="value">3 162</div>
+        <div class="unit">METROS ACUMULADOS</div>
+      </div>
+      <div class="hero-stat alert">
+        <div class="label">ETAPAS</div>
+        <div class="value">05</div>
+        <div class="unit">/ 5 DIAS CONSECUTIVOS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-meta">
+    <span>LAT 39.4°N → 39.7°N</span>
+    <span>LON -8.8°W → -8.1°W</span>
+    <span>REGIÃO: ESTREMADURA / RIBATEJO / PINHAL INTERIOR</span>
+    <span>CODE NAME: <b style="color:var(--red)">CAOS</b></span>
+  </div>
+</header>
+
+<!-- ===== SECTION 01 · BRIEFING ===== -->
+<section class="block" id="briefing">
+  <div class="section-head reveal">
+    <div class="section-num">01</div>
+    <div>
+      <div class="section-title">Briefing<br>Operacional</div>
+      <small>SITREP · CONDIÇÕES · OBJECTIVO</small>
+    </div>
+    <div class="section-tag">REF / <b>CT-EXT-III-2026</b></div>
+  </div>
+
+  <div class="briefing-cells reveal" id="briefingGrid">
+    <div>
+      <div class="cell-tag">› MISSÃO</div>
+      <p>
+        Atravessar 166 km em terreno misto, do interior calcário das Serras de Aire e Candeeiros até ao ponto geodésico no centro do continente português. Equipa em autonomia total durante <b style="color:var(--text)">cinco dias consecutivos</b>, navegação por leitura de carta, gestão coletiva de recursos.
+      </p>
+    </div>
+    <div>
+      <div class="cell-tag">› TERRENO</div>
+      <p>
+        Carreiros calcários, estradões florestais, trilhos pedonais sinalizados e fora-de-trilho. Travessias de albufeira do Castelo do Bode na Etapa 4. Setembro: dias quentes (até 32 °C) e noites frescas (~12 °C). <b style="color:var(--text)">Risco de incêndio rural — monitorização ICNF.</b>
+      </p>
+    </div>
+    <div>
+      <div class="cell-tag">› DOUTRINA</div>
+      <p>
+        A operação opera por <b style="color:var(--text)">células</b>: líder, primeiros socorros, logística. Decisões coletivas, ritmo definido pelo elo mais fraco. Comunicação restrita aos check-points. <em style="color:var(--red); font-style:normal;">Quem desiste, sai por meios próprios.</em>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 02 · ROTA ===== -->
+<section class="block" id="rota">
+  <div class="section-head reveal">
+    <div class="section-num">02</div>
+    <div>
+      <div class="section-title">Rota<br>Completa</div>
+      <small>TRAÇADO TOTAL · 5 ETAPAS · 166,6 KM</small>
+    </div>
+    <div class="section-tag">START / <b>MIRA DE AIRE</b> · FINISH / <b>MELRIÇA</b></div>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-card reveal">
+      <div class="map-card-head">
+        <span>› TRAÇADO TÁCTICO</span>
+        <span>SCALE / <b>1:380K</b></span>
+      </div>
+      <svg id="routeMap" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="reveal">
+      <div class="map-card-head" style="padding:0 4px 14px">
+        <span>› WAYPOINTS</span>
+        <span>06 PONTOS</span>
+      </div>
+      <div class="legend">
+        <a href="https://www.google.com/maps/search/?api=1&query=Grutas+de+Mira+de+Aire+Portugal" target="_blank" rel="noopener" class="legend-row" style="color:#7ED957">
+          <span class="lbl">PT.A</span>
+          <span class="marker" style="background:#7ED957"></span>
+          <span class="name">Grutas Mira de Aire <span style="color:var(--muted)">— início</span></span>
+          <span class="dist">0 KM</span>
+        </a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Castelo+de+Ourém+Portugal" target="_blank" rel="noopener" class="legend-row" style="color:#F4A82C">
+          <span class="lbl">PT.B</span>
+          <span class="marker" style="background:#F4A82C"></span>
+          <span class="name">Castelo de Ourém</span>
+          <span class="dist">33,3</span>
+        </a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Convento+de+Cristo+Tomar" target="_blank" rel="noopener" class="legend-row" style="color:#E07A2F">
+          <span class="lbl">PT.C</span>
+          <span class="marker" style="background:#E07A2F"></span>
+          <span class="name">Convento de Cristo · Tomar</span>
+          <span class="dist">62,6</span>
+        </a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Constância+Portugal" target="_blank" rel="noopener" class="legend-row" style="color:#3DB8F5">
+          <span class="lbl">PT.D</span>
+          <span class="marker" style="background:#3DB8F5"></span>
+          <span class="name">Constância</span>
+          <span class="dist">98,1</span>
+        </a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Miradouro+das+Fontes+Vila+de+Rei" target="_blank" rel="noopener" class="legend-row" style="color:#C1272D">
+          <span class="lbl">PT.E</span>
+          <span class="marker" style="background:#C1272D"></span>
+          <span class="name">Miradouro das Fontes</span>
+          <span class="dist">139,7</span>
+        </a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Centro+Geodésico+de+Portugal" target="_blank" rel="noopener" class="legend-row" style="color:#9B5DE5">
+          <span class="lbl">PT.F</span>
+          <span class="marker" style="background:#9B5DE5"></span>
+          <span class="name">Centro Geodésico <span style="color:var(--muted)">— meta</span></span>
+          <span class="dist">166,6</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROTA CTA · TOTAL GOOGLE MAPS -->
+  <a href="" target="_blank" rel="noopener" class="rota-cta-bar reveal" id="totalGmapsBar" style="text-decoration:none;">
+    <div class="rcta-text">
+      <div class="lbl">› ACESSO RÁPIDO · ROTA COMPLETA</div>
+      <h4>Mira de Aire → Melriça <small>166,6 KM · 5 ETAPAS · 6 WAYPOINTS</small></h4>
+    </div>
+    <span class="gmaps-cta">
+      Abrir percurso no Google Maps
+      <span class="arrow-out">↗</span>
+    </span>
+  </a>
+
+  <!-- MASTER PROFILE -->
+  <div class="profile-master reveal">
+    <div class="profile-master-head">
+      <h3>
+        Perfil de Elevação Total
+        <small>0 — 166,6 KM · 5 ETAPAS · MIRA DE AIRE → MELRIÇA</small>
+      </h3>
+      <div class="profile-master-stats">
+        <div class="pm-stat up">
+          <div class="v">+3 162 m</div>
+          <div class="l">D+ acumulado</div>
+        </div>
+        <div class="pm-stat dn">
+          <div class="v">−2 862 m</div>
+          <div class="l">D− acumulado</div>
+        </div>
+        <div class="pm-stat">
+          <div class="v" style="color:var(--text)">≈ 600 m</div>
+          <div class="l">Pico final · Melriça</div>
+        </div>
+      </div>
+    </div>
+    <svg id="masterProfile" viewBox="0 0 1200 320" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block"></svg>
+  </div>
+</section>
+
+<!-- ===== DAYS ===== -->
+<section class="block" id="dias">
+  <div class="section-head reveal">
+    <div class="section-num">03</div>
+    <div>
+      <div class="section-title">Etapas<br>Diárias</div>
+      <small>BREAKDOWN DIA-A-DIA · DADOS OUTDOORACTIVE</small>
+    </div>
+    <div class="section-tag">VALIDADO / <b>OUTDOORACTIVE · GOOGLE MAPS</b></div>
+  </div>
+
+  <div id="daysContainer"></div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <h4>Controlo Total · III Edição</h4>
+      <p style="margin-bottom:14px">
+        Programa de imersão multi-dia em meio selvagem desenhado por <b style="color:var(--text)">MikeDeltaSix</b>. 
+        Foco em decisão coletiva sob pressão, gestão de recursos e leitura de terreno.
+      </p>
+      <p style="color:var(--muted); font-size:13px; letter-spacing:.05em">
+        A inscrição implica aceitação do regulamento interno e do termo de responsabilidade. 
+        Vagas limitadas. Pré-requisitos físicos e de equipamento confirmados em entrevista.
+      </p>
+    </div>
+    <div>
+      <h4>Logística</h4>
+      <ul>
+        <li>Briefing pré-operação</li>
+        <li>Apoio em check-points</li>
+        <li>Resgate em caso de emergência</li>
+        <li>Seguro de acidentes incluído</li>
+        <li>Debriefing pós-operação</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul>
+        <li>@miguel26delgado</li>
+        <li>controlototal.pt</li>
+        <li>Inscrições até 31 JUL 2026</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 · CONTROLO TOTAL · MIKEDELTASIX</span>
+    <span>DOC. CT-EXT-III-2026 / REV.01</span>
+    <span>NÃO É UMA PROVA. É UM PROCESSO.</span>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   GOOGLE MAPS URLs
+   Pontos nomeados (em vez de coordenadas) para o GMaps mostrar
+   nomes legíveis e permitir routing por andar.
+   ============================================================ */
+const TOTAL_GMAPS = "https://www.google.com/maps/dir/?api=1"
+  + "&origin=" + encodeURIComponent("Grutas de Mira de Aire, Portugal")
+  + "&destination=" + encodeURIComponent("Centro Geodésico de Portugal")
+  + "&waypoints=" + [
+      "Castelo de Ourém, Portugal",
+      "Convento de Cristo, Tomar",
+      "Constância, Portugal",
+      "Miradouro das Fontes, Vila de Rei",
+      "Praia Fluvial do Penedo Furado"
+    ].map(encodeURIComponent).join("|")
+  + "&travelmode=walking";
+
+/* ============================================================
+   DATA — Etapas oficiais (extraídas do Outdooractive)
+   ============================================================ */
+const STAGES = [
+  {
+    n:1, tag:"ETAPA",
+    from:"Grutas de Mira de Aire",
+    to:"Castelo de Ourém",
+    km:33.3, time:"8:45", up:479, down:458,
+    diff:"hard", diffLabel:"DIFÍCIL", diffDots:4,
+    startElev:280, endElev:330,
+    color:"#F4A82C",
+    seed:11,
+    gmaps:"https://www.google.com/maps/dir/?api=1"
+      + "&origin=" + encodeURIComponent("Grutas de Mira de Aire, Portugal")
+      + "&destination=" + encodeURIComponent("Castelo de Ourém, Portugal")
+      + "&travelmode=walking",
+    desc:"Saída do Parque Natural das Serras de Aire e Candeeiros. Travessia por <b>Mira de Aire</b>, <b>Alqueidão da Serra</b> e zona de Fátima, sempre por trilhos de planalto calcário. Final em subida ao castelo medieval de Ourém — primeira noite no topo do esporão."
+  },
+  {
+    n:2, tag:"ETAPA",
+    from:"Castelo de Ourém",
+    to:"Convento de Cristo · Tomar",
+    km:29.3, time:"7:40", up:368, down:578,
+    diff:"hard", diffLabel:"DIFÍCIL", diffDots:4,
+    startElev:330, endElev:140,
+    color:"#E07A2F",
+    seed:23,
+    gmaps:"https://www.google.com/maps/dir/?api=1"
+      + "&origin=" + encodeURIComponent("Castelo de Ourém, Portugal")
+      + "&destination=" + encodeURIComponent("Convento de Cristo, Tomar")
+      + "&travelmode=walking",
+    desc:"Descida sustentada do esporão de Ourém em direção ao <b>Vale do Nabão</b>. Atravessa Caxarias e a Mata Nacional de Tomar. Chegada ao Convento de Cristo pela Cerca — terreno mais rolante mas com forte componente de descida."
+  },
+  {
+    n:3, tag:"ETAPA",
+    from:"Convento de Cristo",
+    to:"Constância",
+    km:35.5, time:"9:15", up:279, down:336,
+    diff:"hard", diffLabel:"DIFÍCIL", diffDots:4,
+    startElev:140, endElev:30,
+    color:"#3DB8F5",
+    seed:37,
+    gmaps:"https://www.google.com/maps/dir/?api=1"
+      + "&origin=" + encodeURIComponent("Convento de Cristo, Tomar")
+      + "&destination=" + encodeURIComponent("Constância, Portugal")
+      + "&travelmode=walking",
+    desc:"Etapa mais longa e simultaneamente a mais plana. Segue o <b>vale do Zêzere</b> em direção à confluência com o Tejo. Travessia da N110 em Asseiceira e Praia do Ribatejo. Descanso na vila de Constância, na confluência dos dois rios."
+  },
+  {
+    n:4, tag:"CRÍTICA",
+    from:"Constância",
+    to:"Miradouro das Fontes",
+    km:41.6, time:"12:35", up:1092, down:835,
+    diff:"extreme", diffLabel:"MUITO DIFÍCIL", diffDots:5,
+    startElev:30, endElev:290,
+    color:"#C1272D",
+    seed:53,
+    gmaps:"https://www.google.com/maps/dir/?api=1"
+      + "&origin=" + encodeURIComponent("Constância, Portugal")
+      + "&destination=" + encodeURIComponent("Miradouro das Fontes, Vila de Rei")
+      + "&travelmode=walking",
+    desc:"<b>A etapa que define a operação.</b> 41,6 km com 1 092 m de subida acumulada. Sai do Tejo, atravessa o vale do Zêzere e contorna a <b>albufeira de Castelo do Bode</b>. Subidas técnicas pelas serras de Carregueiros e Aldeia do Mato. Chegada ao Miradouro das Fontes ao anoitecer — gestão de água é crítica."
+  },
+  {
+    n:5, tag:"FINAL",
+    from:"Miradouro das Fontes",
+    to:"Centro Geodésico · Melriça",
+    km:26.9, time:"8:20", up:944, down:655,
+    diff:"hard", diffLabel:"DIFÍCIL", diffDots:4,
+    startElev:290, endElev:600,
+    color:"#9B5DE5",
+    seed:71,
+    gmaps:"https://www.google.com/maps/dir/?api=1"
+      + "&origin=" + encodeURIComponent("Miradouro das Fontes, Vila de Rei")
+      + "&destination=" + encodeURIComponent("Centro Geodésico de Portugal")
+      + "&waypoints=" + encodeURIComponent("Praia Fluvial do Penedo Furado")
+      + "&travelmode=walking",
+    desc:"Ataque final. Passagem obrigatória pela <b>Praia Fluvial do Penedo Furado</b> antes da subida final à Serra da Melriça. Última subida implica 600 m de desnível positivo na segunda metade — chegada ao marco geodésico que define o centro geográfico de Portugal Continental."
+  }
+];
+
+const WAYPOINTS = [
+  { name:"Mira de Aire",  lat:39.541, lon:-8.717, color:"#7ED957" },
+  { name:"Ourém",         lat:39.654, lon:-8.582, color:"#F4A82C" },
+  { name:"Tomar",         lat:39.604, lon:-8.418, color:"#E07A2F" },
+  { name:"Constância",    lat:39.476, lon:-8.336, color:"#3DB8F5" },
+  { name:"M. Fontes",     lat:39.604, lon:-8.186, color:"#C1272D" },
+  { name:"C. Geodésico",  lat:39.694, lon:-8.135, color:"#9B5DE5" }
+];
+
+/* ============================================================
+   PRNG — mulberry32 seeded RNG (deterministic)
+   ============================================================ */
+function rng(seed){
+  let a = seed >>> 0;
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+/* ============================================================
+   ELEVATION GENERATOR
+   Generates a realistic profile that respects total up/down/start/end.
+   Strategy: simulate ~140 segments, each contributing +/- to elevation.
+   Bias drift towards endpoint, allocate total gain/loss across segments.
+   ============================================================ */
+function generateProfile({km, up, down, startElev, endElev, seed, points=160}){
+  const rnd = rng(seed);
+  // step count
+  const N = points;
+  // distribute "events": each step is either climb or descent of small amount
+  // total positive must = up, total negative must = down, ending must = endElev
+
+  // Build delta array, then adjust
+  const deltas = [];
+  for(let i=0; i<N; i++){
+    const r = rnd();
+    deltas.push((r-0.5) * 2); // -1..1 raw
+  }
+
+  // Separate positive and negative pools
+  let posSum = 0, negSum = 0;
+  deltas.forEach(d => { if(d>0) posSum += d; else negSum += -d; });
+
+  // Now distribute up and down across the segments by scaling each side
+  // Add a small low-frequency wave for natural shape based on terrain index
+  const wave = [];
+  for(let i=0; i<N; i++){
+    const t = i/N;
+    // multi-octave noise via sums of sines with seeded phases
+    const phase1 = rnd()*Math.PI*2;
+    const w =
+      Math.sin(t*Math.PI*3 + phase1)*0.5 +
+      Math.sin(t*Math.PI*7 + phase1*1.3)*0.3 +
+      Math.sin(t*Math.PI*13 + phase1*1.9)*0.2;
+    wave.push(w);
+  }
+
+  // Build elevations
+  const elev = new Array(N+1);
+  elev[0] = startElev;
+  for(let i=0; i<N; i++){
+    let d = deltas[i];
+    if(d > 0){
+      d = (d/posSum) * up;
+    } else {
+      d = (d/negSum) * (-down);
+    }
+    // add some smooth variation
+    d += wave[i] * 0.4;
+    elev[i+1] = elev[i] + d;
+  }
+
+  // Now adjust: actual end is elev[N], target is endElev. Apply linear correction.
+  const actualEnd = elev[N];
+  const drift = endElev - actualEnd;
+  for(let i=0; i<=N; i++){
+    elev[i] += drift * (i/N);
+  }
+
+  // Compute actual up / down post-adjustment for label use
+  let aUp=0, aDn=0;
+  for(let i=1;i<=N;i++){
+    const d = elev[i] - elev[i-1];
+    if(d>0) aUp += d; else aDn += -d;
+  }
+
+  return { elev, n:N, km };
+}
+
+/* ============================================================
+   DRAW PROFILE SVG
+   ============================================================ */
+function drawProfile(svg, data, opts={}){
+  const W = opts.W || 1200;
+  const H = opts.H || 280;
+  const padL = opts.padL ?? 56;
+  const padR = opts.padR ?? 24;
+  const padT = opts.padT ?? 24;
+  const padB = opts.padB ?? 36;
+  const color = opts.color || "#c1272d";
+  const showAxis = opts.showAxis !== false;
+  const showStages = opts.showStages || null;
+
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const elev = data.elev.map(v => Math.max(0, v));
+  const minE = Math.min(...elev);
+  const maxE = Math.max(...elev);
+  const rangeE = Math.max(maxE - minE, 1);
+  const padE = rangeE * 0.15;
+  // Clamp lower bound to 0 if all data is non-negative — no negative altitudes for hiking
+  const yMin = Math.max(0, minE - padE);
+  const yMax = maxE + padE;
+
+  const xAt = i => padL + (i/(elev.length-1)) * innerW;
+  const yAt = e => padT + (1 - (e-yMin)/(yMax-yMin)) * innerH;
+
+  const ns = "http://www.w3.org/2000/svg";
+  const mk = (tag, attrs)=>{
+    const el = document.createElementNS(ns, tag);
+    for(const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  };
+
+  // background grid
+  const g = mk("g", {});
+  // horizontal lines (elevation)
+  const yTicks = 4;
+  for(let i=0;i<=yTicks;i++){
+    const e = yMin + (yMax-yMin)*(i/yTicks);
+    const y = yAt(e);
+    g.appendChild(mk("line", {
+      x1:padL, x2:W-padR, y1:y, y2:y,
+      stroke:"rgba(255,255,255,0.04)", "stroke-width":1
+    }));
+    if(showAxis){
+      const t = mk("text", {
+        x:padL-10, y:y+3,
+        "text-anchor":"end",
+        fill:"#76726a",
+        "font-family":"JetBrains Mono, monospace",
+        "font-size":"9.5"
+      });
+      t.textContent = Math.round(e) + " m";
+      g.appendChild(t);
+    }
+  }
+  // vertical lines (distance)
+  const xTicks = Math.min(10, Math.max(4, Math.round(data.km/4)));
+  for(let i=0;i<=xTicks;i++){
+    const x = padL + innerW*(i/xTicks);
+    g.appendChild(mk("line", {
+      x1:x, x2:x, y1:padT, y2:H-padB,
+      stroke:"rgba(255,255,255,0.03)", "stroke-width":1
+    }));
+    if(showAxis){
+      const t = mk("text", {
+        x:x, y:H-padB+18,
+        "text-anchor":"middle",
+        fill:"#76726a",
+        "font-family":"JetBrains Mono, monospace",
+        "font-size":"9.5"
+      });
+      t.textContent = (data.km * i/xTicks).toFixed(0) + " km";
+      g.appendChild(t);
+    }
+  }
+  svg.appendChild(g);
+
+  // stage boundaries (for master profile)
+  if(showStages){
+    let acc = 0;
+    showStages.forEach((s, idx)=>{
+      acc += s.km;
+      if(idx === showStages.length-1) return;
+      const x = padL + innerW * (acc / showStages.reduce((a,b)=>a+b.km,0));
+      const line = mk("line", {
+        x1:x, x2:x, y1:padT, y2:H-padB,
+        stroke:"rgba(193,39,45,0.4)",
+        "stroke-width":1,
+        "stroke-dasharray":"3,4"
+      });
+      svg.appendChild(line);
+      const lab = mk("text", {
+        x:x+5, y:padT+12,
+        fill:"#c1272d",
+        "font-family":"JetBrains Mono, monospace",
+        "font-size":"9.5",
+        "letter-spacing":"1.5"
+      });
+      lab.textContent = "D" + (idx+2);
+      svg.appendChild(lab);
+    });
+
+    // first day label
+    const lab1 = mk("text", {
+      x:padL+5, y:padT+12,
+      fill:"#c1272d",
+      "font-family":"JetBrains Mono, monospace",
+      "font-size":"9.5",
+      "letter-spacing":"1.5"
+    });
+    lab1.textContent = "D1";
+    svg.appendChild(lab1);
+  }
+
+  // path
+  let d = `M ${xAt(0)} ${yAt(elev[0])}`;
+  for(let i=1;i<elev.length;i++){
+    d += ` L ${xAt(i)} ${yAt(elev[i])}`;
+  }
+
+  // fill
+  const fillD = d + ` L ${xAt(elev.length-1)} ${H-padB} L ${xAt(0)} ${H-padB} Z`;
+
+  // gradient
+  const defs = mk("defs", {});
+  const gradId = "g_" + Math.floor(Math.random()*1e6);
+  const grad = mk("linearGradient", {id:gradId, x1:"0", x2:"0", y1:"0", y2:"1"});
+  grad.appendChild(mk("stop", {offset:"0%", "stop-color":color, "stop-opacity":"0.45"}));
+  grad.appendChild(mk("stop", {offset:"60%", "stop-color":color, "stop-opacity":"0.08"}));
+  grad.appendChild(mk("stop", {offset:"100%", "stop-color":color, "stop-opacity":"0"}));
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  svg.appendChild(mk("path", {
+    d:fillD, fill:`url(#${gradId})`
+  }));
+
+  // stroke
+  svg.appendChild(mk("path", {
+    d, fill:"none", stroke:color, "stroke-width":"1.8",
+    "stroke-linejoin":"round", "stroke-linecap":"round"
+  }));
+
+  // start / end markers
+  svg.appendChild(mk("circle", {
+    cx:xAt(0), cy:yAt(elev[0]),
+    r:4, fill:"var(--bg)", stroke:color, "stroke-width":"2"
+  }));
+  svg.appendChild(mk("circle", {
+    cx:xAt(elev.length-1), cy:yAt(elev[elev.length-1]),
+    r:4, fill:color, stroke:"var(--bg)", "stroke-width":"2"
+  }));
+
+  // peak marker
+  let peakIdx = 0;
+  for(let i=0;i<elev.length;i++) if(elev[i]>elev[peakIdx]) peakIdx=i;
+  if(rangeE > 60){
+    svg.appendChild(mk("circle", {
+      cx:xAt(peakIdx), cy:yAt(elev[peakIdx]),
+      r:3, fill:color, opacity:"0.8"
+    }));
+    const pt = mk("text", {
+      x:xAt(peakIdx), y:yAt(elev[peakIdx])-10,
+      "text-anchor":"middle",
+      fill:color,
+      "font-family":"JetBrains Mono, monospace",
+      "font-size":"9.5",
+      "letter-spacing":"1"
+    });
+    pt.textContent = "▲ " + Math.round(elev[peakIdx]) + "m";
+    svg.appendChild(pt);
+  }
+}
+
+/* ============================================================
+   RENDER DAYS
+   ============================================================ */
+function renderDays(){
+  const root = document.getElementById("daysContainer");
+  STAGES.forEach(s=>{
+    const sec = document.createElement("div");
+    sec.className = "day reveal";
+    sec.id = "dia-" + s.n;
+
+    const dots = Array.from({length:5},(_,i)=>
+      `<i class="${i<s.diffDots?'on':''}"></i>`
+    ).join("");
+
+    sec.innerHTML = `
+      <div class="day-head">
+        <div class="day-num" data-tag="${s.tag}">0${s.n}</div>
+        <div class="day-info">
+          <h2>${s.from} <span class="arrow">→</span> ${s.to}</h2>
+          <div class="meta">
+            <span>${s.km.toString().replace(".",",")} KM</span> ·
+            <span>${s.time} H</span> ·
+            <span style="color:#7a8038">+${s.up} M</span> /
+            <span style="color:#d4a017">−${s.down} M</span>
+          </div>
+        </div>
+        <div class="day-actions">
+          <div class="diff-badge ${s.diff}">
+            <span class="dots">${dots}</span>
+            <span>${s.diffLabel}</span>
+          </div>
+          <a href="${s.gmaps}" target="_blank" rel="noopener" class="gmaps-cta small">
+            Google Maps
+            <span class="arrow-out">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="day-body">
+        <div class="day-stats">
+          <div class="day-stat">
+            <div class="label">DISTÂNCIA</div>
+            <div class="value">${s.km.toString().replace(".",",")}</div>
+            <div class="unit">QUILÓMETROS</div>
+          </div>
+          <div class="day-stat">
+            <div class="label">DURAÇÃO</div>
+            <div class="value">${s.time}</div>
+            <div class="unit">HORAS DE MARCHA</div>
+          </div>
+          <div class="day-stat up">
+            <div class="label">DESNÍVEL +</div>
+            <div class="value">+${s.up}</div>
+            <div class="unit">METROS ACUMULADOS</div>
+          </div>
+          <div class="day-stat dn">
+            <div class="label">DESNÍVEL −</div>
+            <div class="value">−${s.down}</div>
+            <div class="unit">METROS ACUMULADOS</div>
+          </div>
+        </div>
+
+        <div class="day-profile">
+          <div class="day-profile-head">
+            <span>› ALTIMETRIA · ETAPA ${s.n.toString().padStart(2,'0')}</span>
+            <span>RANGE / <b>${s.startElev}M → ${s.endElev}M</b></span>
+          </div>
+          <svg class="elev-svg day-elev" data-stage="${s.n}" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+
+        <div class="day-desc">${s.desc}</div>
+      </div>
+    `;
+    root.appendChild(sec);
+
+    // draw profile
+    const data = generateProfile({
+      km:s.km, up:s.up, down:s.down,
+      startElev:s.startElev, endElev:s.endElev,
+      seed:s.seed, points:140
+    });
+    const svg = sec.querySelector(".day-elev");
+    drawProfile(svg, data, {W:900, H:260, color:s.color});
+  });
+}
+
+/* ============================================================
+   MASTER PROFILE
+   ============================================================ */
+function renderMasterProfile(){
+  // concatenate elevation data from each stage
+  let combined = [];
+  STAGES.forEach((s, idx)=>{
+    const data = generateProfile({
+      km:s.km, up:s.up, down:s.down,
+      startElev:s.startElev, endElev:s.endElev,
+      seed:s.seed*7+3, points:120
+    });
+    if(idx===0) combined = combined.concat(data.elev);
+    else combined = combined.concat(data.elev.slice(1));
+  });
+  const totalKm = STAGES.reduce((a,b)=>a+b.km, 0);
+  const svg = document.getElementById("masterProfile");
+  drawProfile(svg, {elev:combined, n:combined.length-1, km:totalKm}, {
+    W:1400, H:340, padL:64, padR:32, padT:36, padB:42,
+    color:"#c1272d",
+    showStages: STAGES
+  });
+}
+
+/* ============================================================
+   ROUTE MAP
+   ============================================================ */
+function renderRouteMap(){
+  const svg = document.getElementById("routeMap");
+  const ns = "http://www.w3.org/2000/svg";
+  const mk = (tag, attrs, parent)=>{
+    const el = document.createElementNS(ns, tag);
+    for(const k in attrs) el.setAttribute(k, attrs[k]);
+    if(parent) parent.appendChild(el);
+    return el;
+  };
+
+  const W=800, H=500;
+  const padX=60, padY=80;
+
+  // calculate bounds
+  const lats = WAYPOINTS.map(p=>p.lat);
+  const lons = WAYPOINTS.map(p=>p.lon);
+  const minLat=Math.min(...lats)-0.04, maxLat=Math.max(...lats)+0.04;
+  const minLon=Math.min(...lons)-0.06, maxLon=Math.max(...lons)+0.06;
+
+  const xAt = lon => padX + ((lon-minLon)/(maxLon-minLon))*(W-padX*2);
+  const yAt = lat => padY + (1-(lat-minLat)/(maxLat-minLat))*(H-padY*2);
+
+  // background: topographic contour-style lines (decorative, pseudo-random curves)
+  const bg = mk("g", {opacity:"0.18"}, svg);
+  const rnd = rng(99);
+  for(let i=0;i<22;i++){
+    let d = "";
+    const baseY = padY + (H-padY*2)*(i/22);
+    for(let x=0; x<=W; x+=12){
+      const y = baseY + Math.sin(x*0.012 + i*0.7) * 6 + (rnd()-0.5)*3;
+      d += (x===0?"M":"L") + " " + x + " " + y + " ";
+    }
+    mk("path", {d, fill:"none", stroke:"#3a3a45", "stroke-width":"1"}, bg);
+  }
+
+  // graticule (lat/lon grid)
+  const gr = mk("g", {opacity:"0.4"}, svg);
+  for(let i=0;i<=5;i++){
+    const x = padX + ((W-padX*2)*(i/5));
+    mk("line", {x1:x, x2:x, y1:padY-12, y2:H-padY+12, stroke:"#27272f", "stroke-width":"1", "stroke-dasharray":"2,4"}, gr);
+    const t = mk("text", {x:x, y:H-padY+30, "text-anchor":"middle", fill:"#5a5a63", "font-family":"JetBrains Mono", "font-size":"9", "letter-spacing":"1"}, gr);
+    t.textContent = (minLon + (maxLon-minLon)*(i/5)).toFixed(2)+"°W";
+  }
+  for(let i=0;i<=4;i++){
+    const y = padY + ((H-padY*2)*(i/4));
+    mk("line", {x1:padX-12, x2:W-padX+12, y1:y, y2:y, stroke:"#27272f", "stroke-width":"1", "stroke-dasharray":"2,4"}, gr);
+    const t = mk("text", {x:padX-18, y:y+3, "text-anchor":"end", fill:"#5a5a63", "font-family":"JetBrains Mono", "font-size":"9", "letter-spacing":"1"}, gr);
+    t.textContent = (maxLat - (maxLat-minLat)*(i/4)).toFixed(2)+"°N";
+  }
+
+  // route line (curved between points) — generate organic path
+  const routeG = mk("g", {}, svg);
+  let d = "";
+  WAYPOINTS.forEach((p,i)=>{
+    const x = xAt(p.lon), y = yAt(p.lat);
+    if(i===0) d += `M ${x} ${y} `;
+    else{
+      const prev = WAYPOINTS[i-1];
+      const px = xAt(prev.lon), py = yAt(prev.lat);
+      // mid-point with offset perpendicular for organic curve
+      const mx = (x+px)/2, my = (y+py)/2;
+      const dx = x-px, dy=y-py;
+      const len = Math.hypot(dx,dy);
+      const off = 14;
+      const nx = -dy/len*off, ny = dx/len*off;
+      d += `Q ${mx+nx} ${my+ny} ${x} ${y} `;
+    }
+  });
+
+  // glow
+  mk("path", {d, fill:"none", stroke:"#c1272d", "stroke-width":"6", opacity:"0.18", "stroke-linecap":"round"}, routeG);
+  // dashed line
+  mk("path", {d, fill:"none", stroke:"#c1272d", "stroke-width":"2.5", "stroke-linecap":"round", "stroke-dasharray":"7,5"}, routeG);
+
+  // waypoints — per-point label placement to avoid collisions
+  // [labelDx, labelDy, labelAnchor]  (anchor: start/middle/end)
+  const labelPlacements = [
+    {dx:0,   dy:42,  anchor:"middle"},  // A — Mira de Aire (below)
+    {dx:0,   dy:-32, anchor:"middle"},  // B — Ourém (above)
+    {dx:0,   dy:-32, anchor:"middle"},  // C — Tomar (above)
+    {dx:0,   dy:42,  anchor:"middle"},  // D — Constância (below)
+    {dx:36,  dy:6,   anchor:"start"},   // E — M. Fontes (right)
+    {dx:-36, dy:6,   anchor:"end"}      // F — C. Geodésico (left)
+  ];
+
+  const wpG = mk("g", {}, svg);
+  WAYPOINTS.forEach((p,i)=>{
+    const x = xAt(p.lon), y = yAt(p.lat);
+    const lp = labelPlacements[i];
+
+    // halo
+    mk("circle", {cx:x, cy:y, r:18, fill:p.color, opacity:"0.12"}, wpG);
+    // crosshair
+    mk("line", {x1:x-14, x2:x-7, y1:y, y2:y, stroke:p.color, "stroke-width":"1"}, wpG);
+    mk("line", {x1:x+7, x2:x+14, y1:y, y2:y, stroke:p.color, "stroke-width":"1"}, wpG);
+    mk("line", {x1:x, x2:x, y1:y-14, y2:y-7, stroke:p.color, "stroke-width":"1"}, wpG);
+    mk("line", {x1:x, x2:x, y1:y+7, y2:y+14, stroke:p.color, "stroke-width":"1"}, wpG);
+    // dot
+    mk("circle", {cx:x, cy:y, r:6, fill:p.color, stroke:"#0b0b0d", "stroke-width":"2"}, wpG);
+
+    // label group at offset
+    const letter = String.fromCharCode(65+i);
+    const tag = mk("g", {transform:`translate(${x+lp.dx},${y+lp.dy})`}, wpG);
+    // place PT.X badge
+    const badgeAlign = lp.anchor === "start" ? 0 :
+                       lp.anchor === "end"   ? -52 : -26;
+    mk("rect", {x:badgeAlign, y:-12, width:52, height:18, fill:"#0b0b0d", stroke:p.color, "stroke-width":"1"}, tag);
+    const t = mk("text", {x:badgeAlign+26, y:1, "text-anchor":"middle", fill:p.color, "font-family":"JetBrains Mono", "font-weight":"700", "font-size":"10", "letter-spacing":"1.5"}, tag);
+    t.textContent = "PT."+letter;
+    // name above or below the badge
+    const nameY = lp.dy < 0 ? -22 : 22;
+    const t2 = mk("text", {x:0, y:nameY, "text-anchor":lp.anchor, fill:"#ece9e3", "font-family":"Barlow Condensed", "font-weight":"600", "font-size":"13", "letter-spacing":"0.5"}, tag);
+    t2.textContent = p.name.toUpperCase();
+  });
+
+  // border
+  mk("rect", {x:padX-12, y:padY-12, width:W-padX*2+24, height:H-padY*2+24, fill:"none", stroke:"#3a3a45", "stroke-width":"1"}, svg);
+  // corner brackets
+  const cornerSize = 14;
+  [[padX-12, padY-12, 1, 1], [W-padX+12, padY-12, -1, 1], [padX-12, H-padY+12, 1, -1], [W-padX+12, H-padY+12, -1, -1]].forEach(([cx,cy,sx,sy])=>{
+    mk("line", {x1:cx, x2:cx+cornerSize*sx, y1:cy, y2:cy, stroke:"#c1272d", "stroke-width":"2"}, svg);
+    mk("line", {x1:cx, x2:cx, y1:cy, y2:cy+cornerSize*sy, stroke:"#c1272d", "stroke-width":"2"}, svg);
+  });
+
+  // compass rose — placed top-left where there's empty space
+  const cR = mk("g", {transform:`translate(${padX+24},${padY+24})`}, svg);
+  mk("circle", {r:18, fill:"#0b0b0d", stroke:"#3a3a45", "stroke-width":"1"}, cR);
+  mk("line", {x1:0, x2:0, y1:-22, y2:0, stroke:"#c1272d", "stroke-width":"1.5"}, cR);
+  mk("polygon", {points:"0,-26 -4,-18 0,-21 4,-18", fill:"#c1272d"}, cR);
+  const cT = mk("text", {x:0, y:5, "text-anchor":"middle", fill:"#ece9e3", "font-family":"JetBrains Mono", "font-weight":"700", "font-size":"10", "letter-spacing":"1.5"}, cR);
+  cT.textContent = "N";
+
+  // scale bar
+  const sb = mk("g", {transform:`translate(${padX-12},${H-padY+50})`}, svg);
+  mk("line", {x1:0, x2:80, y1:0, y2:0, stroke:"#ece9e3", "stroke-width":"1.5"}, sb);
+  mk("line", {x1:0, x2:0, y1:-4, y2:4, stroke:"#ece9e3", "stroke-width":"1.5"}, sb);
+  mk("line", {x1:40, x2:40, y1:-3, y2:3, stroke:"#ece9e3", "stroke-width":"1"}, sb);
+  mk("line", {x1:80, x2:80, y1:-4, y2:4, stroke:"#ece9e3", "stroke-width":"1.5"}, sb);
+  const sbT = mk("text", {x:0, y:-8, fill:"#76726a", "font-family":"JetBrains Mono", "font-size":"9", "letter-spacing":"1"}, sb);
+  sbT.textContent = "0";
+  const sbT2 = mk("text", {x:80, y:-8, "text-anchor":"end", fill:"#76726a", "font-family":"JetBrains Mono", "font-size":"9", "letter-spacing":"1"}, sb);
+  sbT2.textContent = "~10 KM";
+}
+
+/* ============================================================
+   SCROLL REVEAL + NAV ACTIVE
+   ============================================================ */
+function setupReveal(){
+  const els = document.querySelectorAll(".reveal");
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add("in");
+        obs.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.05, rootMargin:"0px 0px -10% 0px"});
+  els.forEach(el=>obs.observe(el));
+  // Safety fallback: any element still not revealed after 4s gets revealed
+  setTimeout(()=>{
+    document.querySelectorAll(".reveal:not(.in)").forEach(el=>el.classList.add("in"));
+  }, 4000);
+}
+
+function setupNav(){
+  const links = document.querySelectorAll("nav .links a");
+  const sections = [
+    {id:"briefing", el:document.getElementById("briefing")},
+    {id:"rota", el:document.getElementById("rota")},
+    {id:"dia-1", el:document.getElementById("dia-1")},
+    {id:"dia-2", el:document.getElementById("dia-2")},
+    {id:"dia-3", el:document.getElementById("dia-3")},
+    {id:"dia-4", el:document.getElementById("dia-4")},
+    {id:"dia-5", el:document.getElementById("dia-5")}
+  ];
+  function update(){
+    const y = window.scrollY + 150;
+    let curr = null;
+    // find the last section whose top is above the line
+    sections.forEach(s=>{ if(s.el && s.el.offsetTop <= y) curr = s.id; });
+    links.forEach(a=>{
+      a.classList.toggle("active", curr !== null && a.getAttribute("href") === "#"+curr);
+    });
+  }
+  window.addEventListener("scroll", update, {passive:true});
+  update();
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", ()=>{
+  // Wire total GMaps URL
+  const bar = document.getElementById("totalGmapsBar");
+  if(bar) bar.href = TOTAL_GMAPS;
+
+  renderDays();
+  renderMasterProfile();
+  renderRouteMap();
+  setupReveal();
+  setupNav();
+
+  // Redraw profiles on resize (responsive)
+  let resizeT;
+  window.addEventListener("resize", ()=>{
+    clearTimeout(resizeT);
+    resizeT = setTimeout(()=>{
+      // SVGs use viewBox so they scale automatically — no redraw needed
+    }, 200);
+  });
+});
+</script>
+
+</body>
+</html>
