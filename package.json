@@ -1,0 +1,27 @@
+{
+  "name": "controlo-total-extreme-challenge",
+  "version": "1.0.0",
+  "description": "Controlo Total · Extreme Challenge III · Página informativa da operação CAOS (22-27 SET 2026)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.19.2"
+  },
+  "keywords": [
+    "controlo-total",
+    "extreme-challenge",
+    "hiking",
+    "portugal",
+    "outdoor"
+  ],
+  "author": "MikeDeltaSix",
+  "license": "UNLICENSED",
+  "private": true
+}
